@@ -13,6 +13,10 @@ from fastapi.security import OAuth2PasswordRequestForm
 from fastapi import UploadFile, File
 import shutil
 import os
+from database import engine
+from models import Base
+
+Base.metadata.create_all(bind=engine)
 
 
 import models
