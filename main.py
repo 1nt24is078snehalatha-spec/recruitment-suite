@@ -27,6 +27,8 @@ import shutil
 import os
 from database import engine
 from models import Base
+import PyPDF2
+from ai_utils import calculate_match_score
 
 Base.metadata.create_all(bind=engine)
 
@@ -98,6 +100,15 @@ def require_role(required_role: str):
             )
         return current_user
     return role_checker
+def extract_text_from_pdf(file_path):
+    text = ""
+    with open(file_path, "rb") as file:
+        reader = PyPDF2.PdfReader(file)
+        for page in reader.pages:
+            page_text = page.extract_text()
+            if page_text:
+                text += page_text
+    return text
 
 
 @app.get("/")
@@ -220,16 +231,33 @@ def apply_for_job(
     with open(file_location, "wb") as buffer:
         shutil.copyfileobj(resume.file, buffer)
 
+    # 🔥 AI PART STARTS HERE
+
+    resume_text = extract_text_from_pdf(file_location)
+
+    score = calculate_match_score(
+        resume_text,
+        job.description
+    )
+
+    # 🔥 AI PART ENDS HERE
+
     new_application = models.Application(
         job_id=job_id,
         candidate_id=current_user.id,
-        resume_path=file_location
+        resume_path=file_location,
+        resume_text=resume_text,      # NEW
+        match_score=score             # NEW
     )
 
     db.add(new_application)
     db.commit()
 
-    return {"message": "Application submitted successfully"}
+    return {
+        "message": "Application submitted successfully",
+        "ai_match_score": score
+    }
+
 
 @app.get("/job/{job_id}/applications", response_model=list[schemas.ApplicationResponse])
 def view_applications(

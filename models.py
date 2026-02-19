@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Text, ForeignKey
+from sqlalchemy import Column, Integer, String, ForeignKey, DateTime, Text, Float
 from sqlalchemy.orm import relationship
 from database import Base
 from sqlalchemy import DateTime
@@ -37,7 +37,9 @@ class Application(Base):
     job_id = Column(Integer, ForeignKey("jobs.id"))
     candidate_id = Column(Integer, ForeignKey("users.id"))
 
-    resume_path = Column(String)  # NEW
+    resume_path = Column(String)  
+    resume_text = Column(Text)    
+    match_score = Column(Float)   
     status = Column(String, default="pending")
 
     applied_at = Column(DateTime, default=datetime.utcnow)
