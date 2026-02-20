@@ -1,4 +1,4 @@
-📑 Project Documentation: AI-Powered Recruitment Suite
+Project Documentation: AI-Powered Recruitment Suite
 
 **Version:** 1.0.0
 
