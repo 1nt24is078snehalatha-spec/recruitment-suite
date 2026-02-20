@@ -1,0 +1,128 @@
+📑 Project Documentation: AI-Powered Recruitment Suite
+
+**Version:** 1.0.0
+
+**Backend:** FastAPI (Python)
+
+**Frontend:** HTML5 / CSS3 / Vanilla JS
+
+**Database:** PostgreSQL
+
+**Status:** Live & Production Ready
+
+---
+
+##  1. Executive Summary
+
+The **Recruitment Suite** is a full-stack, enterprise-grade hiring platform designed to automate the bridge between talent and opportunity. By leveraging **Asynchronous Python (FastAPI)** and **Natural Language Processing (NLP)**, the system parses candidate resumes, calculates a "Job Fit" score via Machine Learning, and provides recruiters with a ranked dashboard of applicants.
+
+---
+
+## 2. High-Level Architecture
+
+The system follows a **Decoupled Client-Server Architecture**, ensuring that the frontend and backend can scale independently.
+
+### **The Three-Tier Model**
+
+1. **Presentation Layer (Frontend):** A responsive interface built with HTML/CSS and Vanilla JavaScript. It manages user sessions via JWT and handles asynchronous data fetching.
+2. **Logic Layer (FastAPI Backend):** Processes business logic, executes ML scoring, and manages authentication/authorization.
+3. **Data Layer (PostgreSQL):** A persistent relational database managed via SQLAlchemy ORM and tracked by Alembic migrations.
+
+---
+
+##  3. Backend Engineering (Deep-Dive)
+
+### **3.1 Core Framework**
+
+The backend is built on **FastAPI**, chosen for its high performance (comparable to Node.js and Go) and its native support for asynchronous programming (`async/await`).
+
+* **Pydantic V2:** Used for data validation and settings management.
+* **Dependency Injection:** A modular approach to injecting database sessions and security checks into API endpoints.
+
+### **3.2 Database & Migrations**
+
+* **SQLAlchemy 2.0:** Utilizing the latest ORM standards for clean, type-hinted database queries.
+* **Alembic:** Handles schema evolution. Instead of manual SQL edits, version-controlled scripts track changes like adding tables or modifying columns, ensuring production consistency.
+
+### **3.3 Machine Learning Engine**
+
+The platform features an automated **Scoring Module** using `scikit-learn`:
+
+1. **Extraction:** `PyPDF2` parses uploaded resumes.
+2. **NLP Vectorization:** Text is converted into numerical vectors using `TfidfVectorizer`.
+3. **Similarity Calculation:** The system uses **Cosine Similarity** to compare the Resume Vector () against the Job Description Vector ().
+
+
+## 4. Security & Identity Management
+
+### **4.1 Authentication**
+
+The system implements **OAuth2 with Password Bearer**.
+
+* **Hashing:** Passwords are never stored in plain text; they are salted and hashed using **Bcrypt** via the `passlib` library.
+* **JWT (JSON Web Tokens):** Upon login, a signed token is issued. This token is stateless, meaning the server doesn't need to store session data, improving scalability.
+
+### **4.2 Role-Based Access Control (RBAC)**
+
+Endpoints are protected by specialized dependency guards:
+
+* **Public:** Registration and Login.
+* **Candidate:** View jobs and apply.
+* **Recruiter:** Create jobs, view all applications, and update candidate statuses.
+
+---
+
+##  5. Frontend Integration
+
+The frontend is a "Vanilla+" implementation, avoiding heavy framework overhead to ensure maximum speed and SEO efficiency.
+
+* **State Management:** Tokens are securely stored in `localStorage`.
+* **Asynchronous UI:** Using the `Fetch API` to interact with the backend without refreshing the page.
+* **Responsive Design:** CSS Grid and Flexbox ensure the recruiter dashboard works on both desktop and mobile devices.
+
+---
+
+##  6. API Reference (Core Endpoints)
+
+| Method | Endpoint | Description | Auth Required |
+| --- | --- | --- | --- |
+| **POST** | `/register` | Create a new account | No |
+| **POST** | `/login` | Get JWT Access Token | No |
+| **GET** | `/profile` | Current user details | Yes (Any) |
+| **POST** | `/jobs` | Create a new job post | Yes (Recruiter) |
+| **GET** | `/jobs` | List all jobs | No |
+| **POST** | `/apply/{id}` | Upload PDF & Apply | Yes (Candidate) |
+| **PUT** | `/status/{id}` | Update App Status | Yes (Recruiter) |
+
+---
+
+##  7. Deployment & DevOps
+
+### **7.1 Containerization**
+
+The entire backend is **Dockerized**. The `Dockerfile` ensures that the environment (Python version, OS libraries, and dependencies) is identical across development and production.
+
+### **7.2 Cloud Hosting**
+
+* **Platform:** Render.
+* **Database:** Managed PostgreSQL.
+* **CI/CD:** Automatic deployments are triggered upon every push to the main branch.
+* **Environment Secrets:** `JWT_SECRET` and `DATABASE_URL` are managed via secure environment variables.
+
+---
+
+##  8. Conclusion & Future Roadmap
+
+This project represents a transition from basic development to **Professional Backend Engineering**.
+
+**Future Goals:**
+
+* **Real-time Notifications:** Implementing WebSockets for instant hire alerts.
+* **AI Interviewing:** Integrating Gemini for automated initial screening questions.
+* **Advanced Analytics:** A dashboard for recruiters to visualize hiring funnel metrics.
+
+---
+
+**Documented by:** [g snehalatha ]
+
+**Date:20 February 2026
