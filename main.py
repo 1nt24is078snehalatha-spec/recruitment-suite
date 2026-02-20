@@ -5,7 +5,7 @@ app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],
+    allow_origins=["http://localhost:5500", "http://127.0.0.1:5500"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -156,13 +156,14 @@ def login(form_data: OAuth2PasswordRequestForm = Depends(),
         "access_token": access_token,
         "token_type": "bearer"
     }
-
 @app.get("/profile")
 def get_profile(current_user: models.User = Depends(get_current_user)):
     return {
         "name": current_user.name,
-        "email": current_user.email
+        "email": current_user.email,
+        "role": current_user.role
     }
+
 @app.get("/users", response_model=list[schemas.UserResponse])
 def get_all_users(
     db: Session = Depends(get_db),
@@ -308,6 +309,29 @@ def update_application_status(
     db.commit()
 
     return {"message": f"Application marked as {new_status}"}
+@app.get("/my-applications")
+def get_my_applications(
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(require_role("candidate"))
+):
+    applications = db.query(models.Application).filter(
+        models.Application.candidate_id == current_user.id
+    ).all()
 
+    result = []
+
+    for app in applications:
+        job = db.query(models.Job).filter(
+            models.Job.id == app.job_id
+        ).first()
+
+        result.append({
+            "id": app.id,
+            "job_title": job.title,
+            "status": app.status,
+            "score": app.match_score
+        })
+
+    return result
 
 
