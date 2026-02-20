@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Register</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="container fade">
+  <div class="card">
+    <h2>Register</h2>
+    <input type="text" id="name" placeholder="Name">
+    <input type="email" id="email" placeholder="Email">
+    <input type="password" id="password" placeholder="Password">
+    <button onclick="register()">Register</button>
+  </div>
+</div>
+
+<script src="js/api.js"></script>
+<script>
+async function register() {
+    await apiRequest("/register", "POST", {
+        name: name.value,
+        email: email.value,
+        password: password.value
+    });
+
+    alert("Registered Successfully!");
+    window.location.href = "login.html";
+}
+</script>
+</body>
+</html>

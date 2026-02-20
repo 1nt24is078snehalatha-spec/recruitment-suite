@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Apply</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="container">
+<div class="card">
+  <h2>Upload Resume</h2>
+  <input type="file" id="resume" accept="application/pdf">
+  <button onclick="apply()">Submit</button>
+</div>
+
+<script src="js/api.js"></script>
+<script src="js/auth.js"></script>
+
+<script>
+requireAuth();
+
+async function apply() {
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const job_id = urlParams.get("job_id");
+
+    const file = document.getElementById("resume").files[0];
+
+    const formData = new FormData();
+    formData.append("resume", file);
+
+    const response = await apiRequest(`/apply/${job_id}`, "POST", formData, true);
+
+    alert("AI Match Score: " + response.ai_match_score + "%");
+    window.location.href = "dashboard.html";
+}
+</script>
+</body>
+</html>

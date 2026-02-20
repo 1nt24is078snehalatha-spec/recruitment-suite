@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Dashboard</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body onload="loadDashboard()">
+<div class="layout container">
+
+  <div class="sidebar">
+    <h3>Dashboard</h3>
+    <a href="jobs.html"><button>Jobs</button></a>
+    <a href="admin.html" id="adminLink" style="display:none;">
+      <button>Admin</button>
+    </a>
+    <button onclick="logout()">Logout</button>
+  </div>
+
+  <div>
+    <div class="card">
+      <h2 id="username"></h2>
+      <p>Email: <span id="useremail"></span></p>
+    </div>
+
+    <div id="appsContainer"></div>
+
+  </div>
+
+</div>
+
+<script src="js/api.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/dashboard.js"></script>
+</body>
+</html>
